@@ -174,7 +174,8 @@ answer_query_using_materialized_views(PlannerInfo *root,
 		/*
 		 * AQUMV
 		 * Currently the data of IVM is always up-to-date if there were.
-		 * Take care of this when IVM defered-fefresh is supported(in SERVERLESS mode).
+		 * However, we place this future-proof condition to take
+		 * care of IVM deferred maintenance/incremental refresh feature (in SERVERLESS mode).
 		 * 
 		 * Normal materialized views could also be used if its data is up to date.
 		 */
@@ -693,10 +694,10 @@ void aqumv_adjust_simple_query(Query *viewQuery)
 	 * AQUMV
 	 * We have to rewrite now before we do the real Equivalent
 	 * Transformation 'rewrite'.
-	 * Because actions sotored in rule is not a normal query tree,
-	 * it can't be used directly, ex: new/old realtions used to
+	 * Because actions stored in rule is not a normal query tree,
+	 * it can't be used directly, with exception to new/old relations used to
 	 * refresh mv.
-	 * Earse unused relatoins, keep the right one.
+	 * Erase unused relations, keep the right one.
 	 */
 	foreach (lc, viewQuery->rtable)
 	{
